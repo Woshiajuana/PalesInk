@@ -3,5 +3,6 @@ export default {
         '/test': {
             get: 'test.hello'
         }
-    }
+    },
+
 }
