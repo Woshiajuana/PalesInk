@@ -10,8 +10,7 @@ import koa_cors                             from 'kcors'
 import logger                               from './utils/logger.util'
 import router                               from './utils/router.util'
 import pipe_middleware                      from './middleware/pipe.middleware'
-// import validation_middleware                from './middleware/validation.middleware'
-const validation_middleware = require('./middleware/validation.middleware')
+import validation_middleware                from './middleware/validation.middleware'
 
 const app = new Koa();
 

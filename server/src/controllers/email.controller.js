@@ -16,7 +16,6 @@ class EmailController {
         } catch (e) {
             ctx.pipeFail(e);
         }
-
     }
 
     // 验证邮箱

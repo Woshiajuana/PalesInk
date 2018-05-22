@@ -30,9 +30,6 @@ const controllers = requireAll({
             if (_.isString(value)) {
                 controller = value.split('.')[0];
                 action = value.split('.')[1];
-                console.log(controllers)
-                console.log(controller)
-                console.log(controllers[controller])
                 if (action) {
                     router[key](route, controllers[controller]['default'][action])
                 } else if (controller) {
