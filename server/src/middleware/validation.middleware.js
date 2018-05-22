@@ -1,11 +1,11 @@
-import _                from 'lodash'
-import validator        from 'validator'
-import koaValidator     from 'koa-middle-validator'
+const _ = require('lodash')
+const validator = require('validator')
+const koaValidator = require('koa-middle-validator')
 
 /**
  * 自定义验证
  */
-export default () => koaValidator({
+module.exports = () => koaValidator({
     errorFormatters: (param, message, value) => {
         return {
             param,

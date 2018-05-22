@@ -4,8 +4,8 @@ class UserController {
 
     // 创建用户
     async create (ctx) {
-        ctx.body = '创建成功';
-        UserModel.create()
+        // ctx.body = '创建成功';
+        ctx.pipeDone('创建成功')
     }
 
     // 更新用户
@@ -16,8 +16,9 @@ class UserController {
 
     // 查询用户
     async find (ctx) {
-
+        console.log(5)
         ctx.body = '查询用户'
+        // ctx.pipeDone('查询用户')
     }
 
     // 用户列表
