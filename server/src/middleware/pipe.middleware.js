@@ -4,7 +4,6 @@ import logger               from './../utils/logger.util'
 import {logger_type}        from './../config/logger.config'
 
 export default () => async (ctx, next) => {
-    console.log(1)
     try {
         ctx._pipeDoneData = {};
         ctx._pipeFailData = {};
@@ -19,7 +18,6 @@ export default () => async (ctx, next) => {
             logger[errorType]().error(__dirname, '失败原因: ', stack || message)
         };
         await next();
-        console.log(3)
         // 拦截返回
         if (!_.isEmpty(ctx._pipeFailData)) {
             ctx.body = ctx._pipeFailData;

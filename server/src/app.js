@@ -1,15 +1,16 @@
 
-import Koa                  from 'koa'
-import path                 from 'path'
-import koa_body             from 'koa-body'
-import koa_favicon          from 'koa-favicon'
-import koa_convert          from 'koa-convert'
-import koa_static           from 'koa-static'
-import koa_views            from 'koa-views'
-import koa_cors             from 'kcors'
-import logger               from './utils/logger.util'
-import router               from './utils/router.util'
-import pipe_middleware      from './middleware/pipe.middleware'
+import Koa                                  from 'koa'
+import path                                 from 'path'
+import koa_body                             from 'koa-body'
+import koa_favicon                          from 'koa-favicon'
+import koa_convert                          from 'koa-convert'
+import koa_static                           from 'koa-static'
+import koa_views                            from 'koa-views'
+import koa_cors                             from 'kcors'
+import logger                               from './utils/logger.util'
+import router                               from './utils/router.util'
+import pipe_middleware                      from './middleware/pipe.middleware'
+import validation_middleware                from './middleware/validation.middleware'
 
 const app = new Koa();
 
@@ -42,6 +43,7 @@ app.use(async (ctx, next) => {
 
 // middleware 中间件
 app.use(koa_convert(
+    validation_middleware(), // 验证参数
     pipe_middleware(),   // 通讯
 ));
 
