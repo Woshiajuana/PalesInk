@@ -22,6 +22,16 @@ export default () => async (ctx, next) => {
         console.log(3)
         await next();
         console.log(4)
+        // 拦截错误验证
+        const validationErrors = ctx.validationErrors();
+        if (validationErrors) {
+            ctx.body = {
+                code: 'VD99',
+                message: '参数验证失败',
+                stack: validationErrors,
+            };
+            return logger.system().error(__filename, '参数验证失败', validationErrors)
+        }
         // 拦截返回
         if (!_.isEmpty(ctx._pipeFailData)) {
             ctx.body = ctx._pipeFailData;
