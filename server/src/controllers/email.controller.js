@@ -1,4 +1,4 @@
-
+import emailService                         from './../services/email.service'
 
 class EmailController {
 
@@ -12,6 +12,7 @@ class EmailController {
         });
         if (ctx.validationErrors()) return null;
         try {
+            await emailService.send(ctx.request.body.email);
             ctx.pipeDone();
         } catch (e) {
             ctx.pipeFail(e);

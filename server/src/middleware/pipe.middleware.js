@@ -4,9 +4,7 @@ import logger               from './../utils/logger.util'
 import {logger_type}        from './../config/logger.config'
 
 export default () => async (ctx, next) => {
-    console.log(1)
     try {
-        console.log(2)
         ctx._pipeDoneData = {};
         ctx._pipeFailData = {};
         ctx.pipeDone = (result) => {
@@ -19,9 +17,7 @@ export default () => async (ctx, next) => {
             const errorType = _.includes(logger_type, _.get(input, 'type')) ? input.type : 'system';
             logger[errorType]().error(__dirname, '失败原因: ', stack || message)
         };
-        console.log(3)
         await next();
-        console.log(4)
         // 拦截错误验证
         const validationErrors = ctx.validationErrors();
         if (validationErrors) {
