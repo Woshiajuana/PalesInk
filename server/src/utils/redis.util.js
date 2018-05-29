@@ -39,7 +39,33 @@ const connect = () => new Promise(async (resolve, reject) => {
     }
 });
 
+const set = (key, value) => new Promise(async (resolve, reject) => {
+    try {
+        let client = await connect();
+        client.set(key, value, (err) => {
+            if (err) return reject(err);
+            return resolve(client);
+        })
+    } catch (e) {
+        reject(e)
+    }
+});
+
+const get = (key) => new Promise(async (resolve, reject) => {
+    try {
+        let client = await connect();
+        client.get(key, (err, res) => {
+            if (err) return reject(err);
+            return resolve(res);
+        })
+    } catch (e) {
+        reject(e)
+    }
+});
+
 export default {
+    set,
+    get,
     test,
     init,
     connect,
