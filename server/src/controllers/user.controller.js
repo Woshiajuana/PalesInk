@@ -1,5 +1,6 @@
 import UserModel                        from './../models/user.model'
 import UserService                      from './../services/user.service'
+import EmailService                     from './../services/email.service'
 
 class UserController {
 
@@ -29,8 +30,9 @@ class UserController {
         if (ctx.validationErrors()) return null;
         try {
             let data = ctx.request.body;
+            await EmailService.check(data.email, data.code);
             await UserService.create(data.email, data.password, data.code);
-            ctx.pipeDone('注册成功')
+            ctx.pipeDone('注册成功');
         } catch (err) {
             ctx.pipeFail(err);
         }

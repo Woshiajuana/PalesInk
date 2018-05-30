@@ -1,3 +1,4 @@
+
 import EmailService                         from './../services/email.service'
 
 class EmailController {
@@ -17,7 +18,7 @@ class EmailController {
         try {
             let data = ctx.request.body;
             await EmailService.send(data.email);
-            ctx.pipeDone();
+            ctx.pipeDone('验证码已发送，十分钟内有效');
         } catch (err) {
             ctx.pipeFail(err);
         }

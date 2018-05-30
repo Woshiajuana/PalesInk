@@ -16,9 +16,12 @@ class EmailService {
                 try {
                     if (err && err.code === 'ENOENT') throw '邮件模板 not find';
                     if (err) throw err;
-                    let check_code = WowCool.obtainRandomNumber(EmailConfig.email.limit);
-                    let redis_client = await RedisUtil.set(recipient, check_code);
-                    redis_client.expire(recipient, 30);
+                    let code = WowCool.obtainRandomNumber(EmailConfig.email.limit);
+                    let check_code = {
+                        code,
+                        expire: new Date().getTime() + EmailConfig.email.expire * 1000,
+                    };
+                    await RedisUtil.hmset(recipient, check_code);
                     let content = file.replace(/{{}}/, check_code);
                     await EmailUtil.send(recipient, EmailConfig.subject, content);
                     return resolve();
@@ -32,8 +35,13 @@ class EmailService {
     // 验证验证码
     async check (recipient, check_code) {
         try {
-            let redis_code = await RedisUtil.get(recipient);
-            if (redis_code !== check_code) return ('验证失败');
+            let redis_code = await RedisUtil.hgetall(recipient);
+            if (!redis_code) throw '验证码错误';
+            let { code, expire } = redis_code;
+            if (expire < new Date().getTime()) throw '验证码超时，请重新验证';
+            if (code !== check_code) throw '验证码错误';
+            RedisUtil.del(recipient);
+            return true;
         } catch (err) {
             throw(err);
         }

@@ -63,7 +63,46 @@ const get = (key) => new Promise(async (resolve, reject) => {
     }
 });
 
+const hmset = (key, value) => new Promise(async (resolve, reject) => {
+    try {
+        let client = await connect();
+        client.hmset(key, value, (err) => {
+            if (err) return reject(err);
+            return resolve(client);
+        })
+    } catch (e) {
+        reject(e)
+    }
+});
+
+const hgetall = (key) => new Promise(async (resolve, reject) => {
+    try {
+        let client = await connect();
+        client.hgetall(key, (err, res) => {
+            if (err) return reject(err);
+            return resolve(res);
+        })
+    } catch (e) {
+        reject(e)
+    }
+});
+
+const del = (keys) => new Promise(async (resolve, reject) => {
+    try {
+        let client = await connect();
+        client.del(keys, (err, res) => {
+            if (err) return reject(err);
+            return resolve(res);
+        })
+    } catch (e) {
+        reject(e)
+    }
+});
+
 export default {
+    del,
+    hmset,
+    hgetall,
     set,
     get,
     test,
