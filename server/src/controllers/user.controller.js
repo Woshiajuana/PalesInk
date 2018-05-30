@@ -1,6 +1,5 @@
-import UserModel                        from './../models/user.model'
+
 import UserService                      from './../services/user.service'
-import EmailService                     from './../services/email.service'
 
 class UserController {
 
