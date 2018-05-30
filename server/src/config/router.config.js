@@ -22,10 +22,6 @@ export default {
             '/send': {
                 post: 'email.send'
             },
-            // 验证
-            '/check': {
-                post: 'email.check'
-            },
         }
     }
 }

@@ -1,10 +1,10 @@
 
 import fs                           from 'fs'
 import path                         from 'path'
-import emailUtil                    from './../utils/emai.util'
-import redisUtil                    from './../utils/redis.util'
-import emailConfig                  from './../config/email.config'
-import wowCool                      from './../wow-cool'
+import EmailUtil                    from './../utils/emai.util'
+import RedisUtil                    from './../utils/redis.util'
+import EmailConfig                  from './../config/email.config'
+import WowCool                      from './../wow-cool'
 
 
 class EmailService {
@@ -14,13 +14,13 @@ class EmailService {
         return new Promise( async (resolve, reject) => {
             fs.readFile(path.join(__dirname, '../views/email.html'), "utf-8", async (err, file) => {
                 try {
-                    if (err && err.code === 'ENOENT') throw('邮件模板 not find');
+                    if (err && err.code === 'ENOENT') throw '邮件模板 not find';
                     if (err) throw err;
-                    let check_code = wowCool.obtainRandomNumber(emailConfig.email.limit);
-                    let redis_client = await redisUtil.set(recipient, check_code);
-                    redis_client.expire(recipient, 30000);
+                    let check_code = WowCool.obtainRandomNumber(EmailConfig.email.limit);
+                    let redis_client = await RedisUtil.set(recipient, check_code);
+                    redis_client.expire(recipient, 30);
                     let content = file.replace(/{{}}/, check_code);
-                    await emailUtil.send(recipient, emailConfig.subject, content);
+                    await EmailUtil.send(recipient, EmailConfig.subject, content);
                     return resolve();
                 } catch (err) {
                     reject(err);
@@ -31,15 +31,12 @@ class EmailService {
 
     // 验证验证码
     async check (recipient, check_code) {
-        return new Promise( async (resolve, reject) => {
-            try {
-                let redis_code = await redisUtil.get(recipient);
-                console.log('取出来的code', redis_code);
-                redis_code === check_code ? resolve() : reject('验证失败')
-            } catch (err) {
-                reject(err);
-            }
-        })
+        try {
+            let redis_code = await RedisUtil.get(recipient);
+            if (redis_code !== check_code) return ('验证失败');
+        } catch (err) {
+            throw(err);
+        }
     }
 
 }

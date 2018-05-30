@@ -1,11 +1,39 @@
-import UserModel                 from './../models/user.model'
+import UserModel                        from './../models/user.model'
+import UserService                      from './../services/user.service'
 
 class UserController {
 
     // 创建用户
     async create (ctx) {
-        // ctx.body = '创建成功';
-        ctx.pipeDone('创建成功')
+        ctx.checkBody({
+            email: {
+                notEmpty: {
+                    options: [true],
+                    errorMessage: 'email 不能为空'
+                },
+                isEmail: { errorMessage: 'email 格式不正确' },
+            },
+            password: {
+                notEmpty: {
+                    options: [true],
+                    errorMessage: 'password 不能为空'
+                },
+            },
+            code: {
+                notEmpty: {
+                    options: [true],
+                    errorMessage: 'code 不能为空'
+                },
+            }
+        });
+        if (ctx.validationErrors()) return null;
+        try {
+            let data = ctx.request.body;
+            await UserService.create(data.email, data.password, data.code);
+            ctx.pipeDone('注册成功')
+        } catch (err) {
+            ctx.pipeFail(err);
+        }
     }
 
     // 更新用户
