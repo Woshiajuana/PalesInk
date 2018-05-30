@@ -30,7 +30,6 @@ class UserController {
         if (ctx.validationErrors()) return null;
         try {
             let data = ctx.request.body;
-            await EmailService.check(data.email, data.code);
             await UserService.create(data.email, data.password, data.code);
             ctx.pipeDone('注册成功');
         } catch (err) {

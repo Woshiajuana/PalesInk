@@ -22,7 +22,7 @@ class EmailService {
                         expire: new Date().getTime() + EmailConfig.email.expire * 1000,
                     };
                     await RedisUtil.hmset(recipient, check_code);
-                    let content = file.replace(/{{}}/, check_code);
+                    let content = file.replace(/{{}}/, code);
                     await EmailUtil.send(recipient, EmailConfig.subject, content);
                     return resolve();
                 } catch (err) {
