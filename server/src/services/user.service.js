@@ -4,9 +4,9 @@ import EmailService                     from './email.service'
 
 class UserService {
 
-    async create (email, password, code) {
+    async create ({email, password, code}) {
         try {
-            await EmailService.check(email, code);
+            await EmailService.check({email, check_code: code});
             let result = await UserModel.findOne({email});
             if (result) throw '该邮箱已注册';
             let user = {

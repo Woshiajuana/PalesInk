@@ -5,7 +5,7 @@ class UserController {
 
     // 创建用户
     async create (ctx) {
-        ctx.checkBody({
+        let expect = {
             email: {
                 notEmpty: {
                     options: [true],
@@ -25,11 +25,12 @@ class UserController {
                     errorMessage: 'code 不能为空'
                 },
             }
-        });
+        };
+        ctx.checkBody(expect);
         if (ctx.validationErrors()) return null;
         try {
-            let data = ctx.request.body;
-            await UserService.create(data.email, data.password, data.code);
+            let data = ctx.filterParams(ctx.request.body, expect);
+            await UserService.create(data);
             ctx.pipeDone('注册成功');
         } catch (err) {
             ctx.pipeFail(err);
@@ -38,8 +39,20 @@ class UserController {
 
     // 更新用户
     async update (ctx) {
-
-        ctx.body = '更新用户'
+        let expect = {
+            _id: {
+                notEmpty: {
+                    options: [true],
+                    errorMessage: 'id 不能为空'
+                },
+            },
+            email: {
+                isEmail: { errorMessage: 'email 格式不正确' },
+            },
+            password: {
+                
+            }
+        }
     }
 
     // 查询用户

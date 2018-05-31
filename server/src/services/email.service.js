@@ -10,7 +10,7 @@ import WowCool                      from './../wow-cool'
 class EmailService {
 
     // 发送验证码
-    async send (recipient) {
+    async send ({email}) {
         return new Promise( async (resolve, reject) => {
             fs.readFile(path.join(__dirname, '../views/email.html'), "utf-8", async (err, file) => {
                 try {
@@ -21,9 +21,9 @@ class EmailService {
                         code,
                         expire: new Date().getTime() + EmailConfig.email.expire * 1000,
                     };
-                    await RedisUtil.hmset(recipient, check_code);
+                    await RedisUtil.hmset(email, check_code);
                     let content = file.replace(/{{}}/, code);
-                    await EmailUtil.send(recipient, EmailConfig.subject, content);
+                    await EmailUtil.send(email, EmailConfig.subject, content);
                     return resolve();
                 } catch (err) {
                     reject(err);
@@ -33,14 +33,14 @@ class EmailService {
     }
 
     // 验证验证码
-    async check (recipient, check_code) {
+    async check ({email, check_code}) {
         try {
-            let redis_code = await RedisUtil.hgetall(recipient);
+            let redis_code = await RedisUtil.hgetall(email);
             if (!redis_code) throw '验证码错误';
             let { code, expire } = redis_code;
             if (expire < new Date().getTime()) throw '验证码超时，请重新验证';
             if (code !== check_code) throw '验证码错误';
-            RedisUtil.del(recipient);
+            RedisUtil.del(email);
             return true;
         } catch (err) {
             throw(err);
