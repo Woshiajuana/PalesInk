@@ -67,9 +67,7 @@ const hmset = (key, value) => new Promise(async (resolve, reject) => {
     try {
         let client = await connect();
         client.hmset(key, value, (err) => {
-            console.log('存储中',key, value)
             if (err) return reject(err);
-            console.log('存储成功')
             return resolve(client);
         })
     } catch (e) {
@@ -81,9 +79,7 @@ const hgetall = (key) => new Promise(async (resolve, reject) => {
     try {
         let client = await connect();
         client.hgetall(key, (err, res) => {
-            console.log('取出中', key)
             if (err) return reject(err);
-            console.log('取出成功')
             return resolve(res);
         })
     } catch (e) {
